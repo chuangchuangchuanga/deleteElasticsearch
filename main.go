@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"time"
 
 	e "github.com/olivere/elastic/v7"
 )
@@ -13,7 +12,7 @@ func main() {
 
 	index := flag.String("index", "", "索引名")
 	url := flag.String("url", "", "es地址")
-	deletetime := flag.String("deletetime", "-240h", "删除前多少天的数据,默认10天")
+	deletetime := flag.String("deletetime", "2021-08-31", "删除指定日期的数据")
 	flag.Parse()
 
 	client, err := e.NewClient(e.SetSniff(false), e.SetURL(*url))
@@ -22,11 +21,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	now := time.Now()
-	d, _ := time.ParseDuration(*deletetime)
-	deleteTime := now.Add(d).Format("2006-01-02")
-
-	query := e.Query(e.NewRangeQuery("timestamp").Lte(deleteTime))
+	query := e.Query(e.NewMatchQuery("timestamp", deletetime))
 
 	fmt.Print(query)
 
