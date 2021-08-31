@@ -21,7 +21,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	query := e.Query(e.NewMatchQuery("timestamp", deletetime))
+	query := e.Query(e.NewMatchQuery("timestamp", *deletetime))
 
 	fmt.Print(query)
 
